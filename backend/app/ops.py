@@ -71,3 +71,7 @@ def put_settings(body: dict = Body(...), x_admin_token: str = Header(default="")
     _save(k, v, True); return {"saved": k}
 @router.post("/api/cron/run")
 def cron(bg: BackgroundTasks, x_cron_token: str = Header(default="")):
+    _auth(x_cron_token, "CRON_TOKEN")
+    if not db.enabled(): raise HTTPException(503, "database not configured")
+    bg.add_task(_cron_job)
+    return {"started": True}
