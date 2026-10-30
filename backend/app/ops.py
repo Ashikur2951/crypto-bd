@@ -1,5 +1,5 @@
 import os, hmac, re, time
-from fastapi import APIRouter, HTTPException, Header, Body, Query
+from fastapi import APIRouter, HTTPException, Header, Body, Query, BackgroundTasks
 from . import binance, engine, db, paper
 router = APIRouter()
 HTF = {"15m": ["1h", "4h"], "1h": ["4h"], "4h": []}
@@ -20,10 +20,7 @@ def _save(key, value, public):
 def klines(symbol: str = Query(pattern="^[A-Z0-9]{3,20}$"), timeframe: str = Query(pattern="^(15m|1h|4h)$")):
     try: return {"candles": binance.klines(symbol, timeframe, 80), "source": "binance-live", "fetched_at": int(time.time())}
     except binance.DataError as e: raise HTTPException(503, f"market data unavailable: {e}")
-@router.post("/api/cron/run")
-def cron(x_cron_token: str = Header(default="")):
-    _auth(x_cron_token, "CRON_TOKEN")
-    if not db.enabled(): raise HTTPException(503, "database not configured")
+def _cron_job():
     s = settings(); fee = s["paper_fee"]
     p = {**engine.P, **{k: v for k, v in s["params"].items() if k in engine.P}}
     cache = {}
@@ -72,3 +69,5 @@ def put_settings(body: dict = Body(...), x_admin_token: str = Header(default="")
     else: ok = False
     if not ok: raise HTTPException(422, "invalid setting")
     _save(k, v, True); return {"saved": k}
+@router.post("/api/cron/run")
+def cron(bg: BackgroundTasks, x_cron_token: str = Header(default="")):
