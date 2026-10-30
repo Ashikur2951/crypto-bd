@@ -30,7 +30,7 @@ export default function App() {
   const hist = useLoad(() => tab === 1 ? sb(`signals?select=*&order=created_at.desc&limit=50${hs ? `&symbol=eq.${hs}` : ""}${ht ? `&timeframe=eq.${ht}` : ""}${hd ? `&direction=eq.${hd}` : ""}${hdate ? `&created_at=gte.${hdate}` : ""}`) : Promise.resolve(null), [tab, hs, ht, hd, hdate]);
   const pap = useLoad(() => tab === 2 ? Promise.all([sb("paper_trades?select=*&order=created_at.desc&limit=50"), sb("app_settings?key=eq.last_run&select=value")]) : Promise.resolve(null), [tab]);
   const bt = useLoad(() => tab === 3 ? api(`/api/backtest?symbol=${sym}&timeframe=${tf}`) : Promise.resolve(null), [sym, tf, tab]);
-  const list = all.filter(s => s.includes(q.toUpperCase())).slice(0, 60); const d: any = sig.d; const age = d ? Math.round((Date.now() / 1000 - d.generated_at) / 60) : 0;
+  const list = (q ? all.filter(s => s.includes(q.toUpperCase())) : [...COINS.filter(c => all.includes(c)), ...all.filter(s => !COINS.includes(s))]).slice(0, 80); const d: any = sig.d; const age = d ? Math.round((Date.now() / 1000 - d.generated_at) / 60) : 0;
   const st = (x: { busy: boolean; err: boolean }) => x.busy ? <p>{t.load}</p> : x.err ? <p style={{ color: "red" }}>{t.err}</p> : null;
   const admin = async (method: string, body?: any) => { try { const j = await api("/api/admin/settings", { method, headers: { "x-admin-token": tok, "Content-Type": "application/json" }, body: body && JSON.stringify(body) }); setMsg(JSON.stringify(j)); } catch (e: any) { setMsg("✗ " + e.message); } };
   return (<div style={{ maxWidth: 520, margin: "auto", padding: 12, fontFamily: "sans-serif" }}>
@@ -38,7 +38,7 @@ export default function App() {
     <div style={{ display: "flex", gap: 4, flexWrap: "wrap", margin: "8px 0" }}>{t.tabs.map((x: string, i: number) => <button key={i} onClick={() => setTab(i)} style={{ fontWeight: tab === i ? "bold" : "normal" }}>{x}</button>)}</div>
     {(tab === 0 || tab === 3) && <p><input placeholder="search" size={8} value={q} onChange={e => setQ(e.target.value)} /> <Sel v={sym} set={setSym} o={list.includes(sym) ? list : [sym, ...list]} /> <Sel v={tf} set={setTf} o={["15m", "1h", "4h"]} /></p>}
     {tab === 0 && <>{st(sig)}{d && !sig.busy && <div style={{ border: "1px solid #888", borderRadius: 8, padding: 12 }}>
-      <h2>{d.direction}</h2><p>Price: {d.price} · Live (Binance) · {age}m ago {age > 20 && "⚠ stale"}</p>
+      <h2 className={"dir " + d.direction}>{d.direction}</h2><p>Price: {d.price} · Live (Binance) · {age}m ago {age > 20 && "⚠ stale"}</p>
       {d.entry && <><p>{t.entry}: {fmt(d.entry)} · {t.sl}: {fmt(d.stop_loss)}</p><p>{t.tp}: {d.take_profit.map(fmt).join(" / ")} · R:R {d.risk_reward}</p><p style={{ fontSize: 12 }}>{d.invalidation}</p></>}
       {d.reason && <p>{d.reason}</p>}
       {d.indicators && <p style={{ fontSize: 12 }}>EMA20 {fmt(d.indicators.ema20)} · EMA50 {fmt(d.indicators.ema50)} · RSI {fmt(d.indicators.rsi)} · MACD-h {fmt(d.indicators.macd_hist)} · ATR {fmt(d.indicators.atr)} · Vol {String(d.indicators.volume_ok)} · HTF {d.indicators.htf_trends.join("/") || "-"}</p>}</div>}
