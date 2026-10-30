@@ -1,0 +1,20 @@
+:root{--line:#2c3a6b;--txt:#e8ecf5;--mut:#9aa6c7;--up:#22c55e;--down:#ef4444}
+html,body{margin:0;min-height:100%}
+body{color:var(--txt);background:radial-gradient(1200px 600px at 50% -10%,#24306a 0%,transparent 60%),linear-gradient(160deg,#0b1020,#141b34);background-attachment:fixed;font-family:system-ui,"Noto Sans Bengali",sans-serif}
+#root>div{max-width:560px!important;margin:0 auto;padding:16px!important;font-family:inherit!important}
+h1{font-size:26px!important;margin:6px 0 12px;background:linear-gradient(90deg,#7db0ff,#b794ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 6px rgba(79,140,255,.35))}
+button{font:inherit;color:var(--txt);background:linear-gradient(180deg,#34437f,#222d5a);border:1px solid #4a5ca8;border-bottom:4px solid #141b3d;border-radius:12px;padding:8px 14px;box-shadow:0 6px 12px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.18);cursor:pointer;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(3px);border-bottom-width:1px;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+button[style*="bold"]{background:linear-gradient(180deg,#5b97ff,#2f62d6);border-color:#8bb4ff;border-bottom-color:#1a3a8a;box-shadow:0 0 18px rgba(79,140,255,.55),0 6px 12px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.35)}
+select,input{font:inherit;color:var(--txt);background:#0f1730;border:1px solid var(--line);border-radius:10px;padding:8px 10px;box-shadow:inset 0 3px 6px rgba(0,0,0,.5)}
+input[type=date]{color-scheme:dark}
+div[style*="border-radius: 8px"]{background:linear-gradient(145deg,#222e5c,#141c3b)!important;border:1px solid #3d4f94!important;border-radius:18px!important;box-shadow:0 18px 30px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.12);transform:perspective(900px) rotateX(2deg);margin:10px 0;padding:16px!important}
+.dir{font-size:34px;margin:0 0 8px;letter-spacing:2px;text-shadow:0 4px 0 rgba(0,0,0,.45),0 0 22px currentColor}
+.dir.LONG{color:var(--up)}
+.dir.SHORT{color:var(--down)}
+.dir.WAIT{color:#fbbf24}
+svg{border-radius:16px;box-shadow:0 14px 26px rgba(0,0,0,.55),0 0 0 1px #2c3a6b;margin:12px 0}
+p{line-height:1.6}
+pre{background:#0f1730;border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:inset 0 3px 8px rgba(0,0,0,.5)}
+p[style*="border-bottom"]{background:linear-gradient(145deg,#1e2850,#151d3d);border:1px solid #2f3e75!important;border-radius:12px;padding:10px 12px;margin:8px 0;box-shadow:0 6px 12px rgba(0,0,0,.4)}
+small{color:var(--mut)}
